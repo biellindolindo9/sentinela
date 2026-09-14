@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 220" width="100%" height="100%">
+  <defs>
+    <!-- Gradiente Principal Azul Saúde -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0ea5e9" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <!-- Gradiente de Brilho / Respawn -->
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <!-- Sombra para efeito de profundidade nas formas e texto -->
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="3" dy="5" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.22"/>
+    </filter>
+
+    <filter id="softShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- SÍMBOLO DA LOGO -->
+  <g transform="translate(20, 10)">
+    <!-- Ícone de Carregamento / Loop de Respawn (Seta Circular vazada) -->
+    <path d="M 110 30 
+             A 70 70 0 1 1 45 50" 
+          fill="none" 
+          stroke="url(#blueGrad)" 
+          stroke-width="18" 
+          stroke-linecap="round" 
+          filter="url(#dropShadow)" />
+
+    <!-- Ponta da Seta indicando o ciclo de retorno (Respawn) -->
+    <path d="M 110 12 L 128 36 L 98 42 Z" 
+          fill="#0ea5e9" 
+          filter="url(#dropShadow)" />
+
+    <!-- Sombra projetada sob a cruz para criar ilusão de flutuação/profundidade -->
+    <ellipse cx="100" cy="100" rx="32" ry="32" fill="#0369a1" opacity="0.15" />
+
+    <!-- Cruz Médica vazada no centro formando o efeito visual integrado -->
+    <g filter="url(#dropShadow)">
+      <!-- Braço Vertical da Cruz -->
+      <rect x="88" y="65" width="24" height="70" rx="6" fill="url(#glowGrad)" />
+      <!-- Braço Horizontal da Cruz -->
+      <rect x="65" y="88" width="70" height="24" rx="6" fill="url(#glowGrad)" />
+      <!-- Detalhe da junção central com brilho de vida/repartição -->
+      <circle cx="100" cy="100" r="6" fill="#ffffff" opacity="0.9" />
+    </g>
+  </g>
+
+  <!-- TIPOGRAFIA E NOME DO HOSPITAL -->
+  <!-- Palavra RESPAWN com espaço de sombra vazada na letra "P" e "A" -->
+  <text x="210" y="118" 
+        font-family="'Segoe UI', 'Montserrat', 'Arial Black', sans-serif" 
+        font-size="64" 
+        font-weight="900" 
+        letter-spacing="1.5" 
+        fill="#0f172a" 
+        filter="url(#softShadow)">
+    RESP<tspan fill="url(#blueGrad)">AWN</tspan>
+  </text>
+
+  <!-- Subtítulo CENTRO MÉDICO -->
+  <text x="215" y="158" 
+        font-family="'Segoe UI', 'Roboto', sans-serif" 
+        font-size="20" 
+        font-weight="600" 
+        letter-spacing="9" 
+        fill="#64748b">
+    CENTRO MÉDICO
+  </text>
+
+  <!-- Linha Decorativa Dinâmica (Estilo Barra de Vida / HUD de jogo) -->
+  <rect x="215" y="172" width="280" height="4" rx="2" fill="url(#blueGrad)" opacity="0.8" />
+  <rect x="500" y="172" width="12" height="4" rx="2" fill="#38bdf8" />
+</svg>
