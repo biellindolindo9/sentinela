@@ -1,4 +1,4 @@
-```json
+
 {
   "name": "hospital-system",
   "version": "1.0.0",
@@ -16,4 +16,4 @@
   "license": "ISC",
   "type": "commonjs"
 }
-```
+
