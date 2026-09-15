@@ -1,17 +1,19 @@
+```json
 {
   "name": "hospital-system",
   "version": "1.0.0",
-  "main": "api/index.js",
+  "description": "Sistema hospitalar Sentinela",
+  "main": "backend/server.js",
   "scripts": {
-    "start": "node api/index.js"
+    "start": "node backend/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.2.1"
   },
-  "description": "",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs"
 }
+```
