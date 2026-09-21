@@ -1,14 +1,21 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Alta Médica - Respawn Centro Médico</title>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Alta Médica - Respawn Centro Médico
+    </title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -33,8 +40,6 @@
             border-radius: 12px;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
         }
-
-        /* CABEÇALHO */
 
         .cabecalho {
             text-align: center;
@@ -62,8 +67,6 @@
             font-size: 14px;
         }
 
-        /* TÍTULO */
-
         .titulo {
             text-align: center;
             margin-bottom: 30px;
@@ -79,8 +82,6 @@
             margin: 0;
             color: #64748b;
         }
-
-        /* INFORMAÇÕES */
 
         .secao {
             margin-bottom: 25px;
@@ -112,15 +113,11 @@
             color: #0f172a;
         }
 
-        /* TEXTO DA ALTA */
-
         .texto-alta {
             line-height: 1.7;
             font-size: 15px;
             color: #334155;
         }
-
-        /* ASSINATURA */
 
         .assinatura {
             margin-top: 80px;
@@ -140,8 +137,6 @@
             color: #475569;
         }
 
-        /* BOTÕES */
-
         .acoes {
             display: flex;
             gap: 12px;
@@ -156,7 +151,6 @@
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
         }
 
         .btn-imprimir {
@@ -177,8 +171,6 @@
             background: #cbd5e1;
         }
 
-        /* DATA */
-
         .data {
             text-align: right;
             margin-top: 25px;
@@ -186,9 +178,12 @@
             color: #64748b;
         }
 
-        /* =========================
-           IMPRESSÃO / PDF
-        ========================= */
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            color: #16a34a;
+            font-weight: bold;
+        }
 
         @media print {
 
@@ -217,6 +212,10 @@
                 display: none;
             }
 
+            .status {
+                color: #000;
+            }
+
             .cabecalho {
                 margin-bottom: 25px;
             }
@@ -232,6 +231,7 @@
             .assinatura {
                 margin-top: 100px;
             }
+
         }
 
         @media (max-width: 600px) {
@@ -259,193 +259,209 @@
             .linha-assinatura {
                 width: 260px;
             }
+
         }
+
     </style>
+
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <main class="documento">
+    <main class="documento">
 
-            <!-- CABEÇALHO -->
-            <header class="cabecalho">
+        <header class="cabecalho">
 
-                <img
-                    src="respawn.svg"
-                    alt="Respawn Centro Médico"
-                    class="logo"
-                >
+            <img
+                src="respawn.svg"
+                alt="Respawn Centro Médico"
+                class="logo"
+            >
 
-                <h1>Respawn Centro Médico</h1>
+            <h1>
+                Respawn Centro Médico
+            </h1>
 
-                <p>Documento de Alta Médica</p>
+            <p>
+                Documento de Alta Médica
+            </p>
 
-            </header>
-
-
-            <!-- TÍTULO -->
-            <section class="titulo">
-
-                <h2>ALTA MÉDICA</h2>
-
-                <p>
-                    Documento referente ao encerramento do atendimento.
-                </p>
-
-            </section>
+        </header>
 
 
-            <!-- PACIENTE -->
-            <section class="secao">
+        <section class="titulo">
 
-                <h3>Identificação do paciente</h3>
+            <h2>
+                ALTA MÉDICA
+            </h2>
 
-                <div class="campo">
+            <p>
+                Documento referente ao encerramento do atendimento.
+            </p>
 
-                    <strong>Paciente:</strong>
-
-                    <span id="nomePaciente">
-                        Não informado
-                    </span>
-
-                </div>
-
-            </section>
+        </section>
 
 
-            <!-- INFORMAÇÕES -->
-            <section class="secao">
+        <section class="secao">
 
-                <h3>Informações da alta</h3>
+            <h3>
+                Identificação do paciente
+            </h3>
 
-                <div class="texto-alta">
+            <div class="campo">
 
-                    <p>
-                        Declaro que o paciente identificado acima foi
-                        atendido neste estabelecimento e encontra-se
-                        liberado para deixar a unidade após a conclusão
-                        do atendimento médico.
-                    </p>
+                <strong>
+                    Paciente:
+                </strong>
 
-                    <p>
-                        O paciente deverá seguir as orientações,
-                        prescrições e recomendações fornecidas pelo
-                        profissional responsável pelo atendimento.
-                    </p>
-
-                </div>
-
-            </section>
-
-
-            <!-- DATA -->
-            <div class="data">
-
-                Data:
-                <span id="dataAtual"></span>
+                <span id="nomePaciente">
+                    Não informado
+                </span>
 
             </div>
 
+        </section>
 
-            <!-- ASSINATURA -->
-            <section class="assinatura">
 
-                <div class="linha-assinatura"></div>
+        <section class="secao">
+
+            <h3>
+                Informações da alta
+            </h3>
+
+            <div class="texto-alta">
 
                 <p>
-                    Assinatura do médico responsável
+                    Declaro que o paciente identificado acima foi
+                    atendido neste estabelecimento e encontra-se
+                    liberado para deixar a unidade após a conclusão
+                    do atendimento médico.
                 </p>
 
                 <p>
-                    CRM: ______________________________
+                    O paciente deverá seguir as orientações,
+                    prescrições e recomendações fornecidas pelo
+                    profissional responsável pelo atendimento.
                 </p>
-
-            </section>
-
-
-            <!-- AÇÕES -->
-            <div class="acoes">
-
-                <button
-                    class="btn-imprimir"
-                    onclick="imprimirAlta()"
-                >
-                    🖨️ Imprimir / Salvar PDF
-                </button>
-
-                <button
-                    class="btn-voltar"
-                    onclick="voltar()"
-                >
-                    ← Voltar
-                </button>
 
             </div>
 
-        </main>
-
-    </div>
+        </section>
 
 
-    <script>
+        <div class="data">
 
-        // =========================
-        // NOME DO PACIENTE
-        // =========================
+            Data:
+            <span id="dataAtual"></span>
 
-        const parametros = new URLSearchParams(
-            window.location.search
-        );
-
-        const paciente = parametros.get("paciente");
-
-        if (paciente) {
-
-            document.getElementById("nomePaciente").textContent =
-                paciente;
-
-        }
+        </div>
 
 
-        // =========================
-        // DATA ATUAL
-        // =========================
-
-        const agora = new Date();
-
-        const dataFormatada =
-            agora.toLocaleDateString("pt-BR");
-
-        document.getElementById("dataAtual").textContent =
-            dataFormatada;
+        <div class="status">
+            ✓ Alta registrada no sistema
+        </div>
 
 
-        // =========================
-        // IMPRIMIR / SALVAR PDF
-        // =========================
+        <section class="assinatura">
 
-        function imprimirAlta() {
+            <div class="linha-assinatura"></div>
 
-            window.print();
+            <p>
+                Assinatura do médico responsável
+            </p>
 
-        }
+            <p>
+                CRM: ______________________________
+            </p>
+
+        </section>
 
 
-        // =========================
-        // VOLTAR
-        // =========================
+        <div class="acoes">
 
-        function voltar() {
+            <button
+                class="btn-imprimir"
+                onclick="imprimirAlta()"
+            >
+                🖨️ Imprimir / Salvar PDF
+            </button>
 
-            window.history.back();
+            <button
+                class="btn-voltar"
+                onclick="voltar()"
+            >
+                ← Voltar
+            </button>
 
-        }
+        </div>
 
-    </script>
+    </main>
+
+</div>
+
+
+<script>
+
+const parametros =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const paciente =
+    parametros.get("paciente");
+
+
+if (paciente) {
+
+    document.getElementById(
+        "nomePaciente"
+    ).textContent = paciente;
+
+}
+
+
+// ==================================================
+// DATA
+// ==================================================
+
+const agora =
+    new Date();
+
+const dataFormatada =
+    agora.toLocaleDateString(
+        "pt-BR"
+    );
+
+document.getElementById(
+    "dataAtual"
+).textContent = dataFormatada;
+
+
+// ==================================================
+// IMPRIMIR
+// ==================================================
+
+function imprimirAlta() {
+
+    window.print();
+
+}
+
+
+// ==================================================
+// VOLTAR
+// ==================================================
+
+function voltar() {
+
+    window.history.back();
+
+}
+
+</script>
 
 </body>
 
 </html>
-```
