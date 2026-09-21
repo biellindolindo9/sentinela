@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Internações - Respawn Centro Médico</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #eef3f7;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    .cabecalho {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.07);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .cabecalho h1 {
+      margin: 0;
+      color: #0f172a;
+    }
+
+    .cabecalho p {
+      margin: 7px 0 0;
+      color: #64748b;
+    }
+
+    .logo {
+      width: 170px;
+      height: auto;
+    }
+
+    .contador {
+      background: #7c3aed;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .lista {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.07);
+      border-left: 5px solid #7c3aed;
+    }
+
+    .card-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .card h2 {
+      margin: 0;
+      color: #0f172a;
+    }
+
+    .status {
+      background: #7c3aed;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .dados {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .campo {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 12px;
+      border-radius: 7px;
+    }
+
+    .campo strong {
+      display: block;
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 4px;
+    }
+
+    .campo span {
+      font-weight: 500;
+    }
+
+    .campo-grande {
+      grid-column: 1 / -1;
+    }
+
+    .acoes {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .acoes button {
+      border: none;
+      padding: 11px 17px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-alta {
+      background: #16a34a;
+      color: white;
+    }
+
+    .btn-alta:hover {
+      background: #15803d;
+    }
+
+    .btn-atualizar {
+      background: #0284c7;
+      color: white;
+    }
+
+    .vazio {
+      background: white;
+      text-align: center;
+      padding: 50px 20px;
+      border-radius: 12px;
+      color: #64748b;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+    }
+
+    .data {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    @media (max-width: 700px) {
+
+      .dados {
+        grid-template-columns: 1fr;
+      }
+
+      .campo-grande {
+        grid-column: auto;
+      }
+
+      .cabecalho {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .logo {
+        width: 150px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+
+  <!-- CABEÇALHO -->
+
+  <header class="cabecalho">
+
+    <div>
+
+      <img
+        src="respawn.svg"
+        alt="Respawn Centro Médico"
+        class="logo"
+      >
+
+      <h1>
+        🏥 Internações
+      </h1>
+
+      <p>
+        Pacientes atualmente internados no hospital.
+      </p>
+
+    </div>
+
+    <div
+      class="contador"
+      id="contador"
+    >
+      0 internados
+    </div>
+
+  </header>
+
+
+  <!-- LISTA -->
+
+  <main
+    id="lista"
+    class="lista"
+  >
+
+  </main>
+
+
+</div>
+
+
+<script>
+
+// ==================================================
+// CARREGAR INTERNAÇÕES
+// ==================================================
+
+function carregarInternacoes() {
+
+  fetch("/internacoes")
+
+    .then(response => response.json())
+
+    .then(data => {
+
+      const lista =
+        document.getElementById("lista");
+
+      const contador =
+        document.getElementById("contador");
+
+
+      contador.textContent =
+        data.length === 1
+          ? "1 internado"
+          : `${data.length} internados`;
+
+
+      lista.innerHTML = "";
+
+
+      if (data.length === 0) {
+
+        lista.innerHTML = `
+
+          <div class="vazio">
+
+            <h2>
+              Nenhum paciente internado
+            </h2>
+
+            <p>
+              Quando um médico realizar uma internação,
+              o paciente aparecerá aqui.
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      data.forEach(internacao => {
+
+        const dataInternacao =
+          formatarData(
+            internacao.dataInternacao
+          );
+
+
+        lista.innerHTML += `
+
+          <article class="card">
+
+            <div class="card-topo">
+
+              <div>
+
+                <h2>
+                  ${internacao.paciente}
+                </h2>
+
+                <p class="data">
+                  Internado em ${dataInternacao}
+                </p>
+
+              </div>
+
+              <span class="status">
+                INTERNADO
+              </span>
+
+            </div>
+
+
+            <div class="dados">
+
+              <div class="campo">
+
+                <strong>
+                  Quarto
+                </strong>
+
+                <span>
+                  ${internacao.quarto || "Não informado"}
+                </span>
+
+              </div>
+
+
+              <div class="campo">
+
+                <strong>
+                  Leito
+                </strong>
+
+                <span>
+                  ${internacao.leito || "Não informado"}
+                </span>
+
+              </div>
+
+
+              <div class="campo">
+
+                <strong>
+                  CPF
+                </strong>
+
+                <span>
+                  ${internacao.cpf || "Não informado"}
+                </span>
+
+              </div>
+
+
+              <div class="campo">
+
+                <strong>
+                  Medicação
+                </strong>
+
+                <span>
+                  ${internacao.medicacao || "Nenhuma registrada"}
+                </span>
+
+              </div>
+
+
+              <div class="campo campo-grande">
+
+                <strong>
+                  Diagnóstico
+                </strong>
+
+                <span>
+                  ${internacao.diagnostico || "Não informado"}
+                </span>
+
+              </div>
+
+
+              <div class="campo campo-grande">
+
+                <strong>
+                  Motivo da internação
+                </strong>
+
+                <span>
+                  ${internacao.motivo || "Não informado"}
+                </span>
+
+              </div>
+
+
+              <div class="campo campo-grande">
+
+                <strong>
+                  Observações
+                </strong>
+
+                <span>
+                  ${internacao.observacao || "Nenhuma observação"}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="acoes">
+
+              <button
+                class="btn-alta"
+                onclick="darAlta(${internacao.id}, '${escapar(internacao.paciente)}')"
+              >
+                ✅ Dar alta
+              </button>
+
+            </div>
+
+          </article>
+
+        `;
+
+      });
+
+    })
+
+    .catch(error => {
+
+      console.error(error);
+
+      document.getElementById("lista").innerHTML = `
+
+        <div class="vazio">
+
+          <h2>
+            Erro ao carregar internações
+          </h2>
+
+          <p>
+            Verifique se o servidor está funcionando.
+          </p>
+
+        </div>
+
+      `;
+
+    });
+
+}
+
+
+// ==================================================
+// DAR ALTA
+// ==================================================
+
+function darAlta(id, nome) {
+
+  const confirmar =
+    confirm(
+      `Deseja realmente dar alta para ${nome}?`
+    );
+
+
+  if (!confirmar) {
+    return;
+  }
+
+
+  fetch(`/internacoes/${id}/alta`, {
+
+    method: "POST"
+
+  })
+
+  .then(response => response.json())
+
+  .then(data => {
+
+    if (!data.sucesso) {
+
+      alert(
+        data.erro ||
+        "Não foi possível dar alta."
+      );
+
+      return;
+
+    }
+
+
+    window.location.href =
+      "alta.html?paciente=" +
+      encodeURIComponent(nome);
+
+  })
+
+  .catch(error => {
+
+    console.error(error);
+
+    alert(
+      "Erro ao realizar a alta."
+    );
+
+  });
+
+}
+
+
+// ==================================================
+// DATA
+// ==================================================
+
+function formatarData(data) {
+
+  if (!data) {
+    return "Não informada";
+  }
+
+  return new Date(data).toLocaleString(
+    "pt-BR"
+  );
+
+}
+
+
+// ==================================================
+// SEGURANÇA
+// ==================================================
+
+function escapar(texto) {
+
+  return String(texto)
+    .replace(/'/g, "\\'")
+    .replace(/"/g, "&quot;");
+
+}
+
+
+// ==================================================
+// INICIAR
+// ==================================================
+
+carregarInternacoes();
+
+
+// Atualiza a cada 10 segundos
+
+setInterval(
+  carregarInternacoes,
+  10000
+);
+
+</script>
+
+</body>
+
+</html>
