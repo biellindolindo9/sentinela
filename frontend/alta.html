@@ -1,18 +1,451 @@
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <title>Alta Médica - Respawn Centro Médico</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #eef3f7;
+            color: #1f2937;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .documento {
+            background: #ffffff;
+            padding: 45px 55px;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        /* CABEÇALHO */
+
+        .cabecalho {
+            text-align: center;
+            border-bottom: 2px solid #dbe3ea;
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 220px;
+            max-width: 80%;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .cabecalho h1 {
+            margin: 5px 0;
+            color: #0f172a;
+            font-size: 28px;
+        }
+
+        .cabecalho p {
+            margin: 5px 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* TÍTULO */
+
+        .titulo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .titulo h2 {
+            margin: 0 0 8px;
+            color: #0f172a;
+            font-size: 24px;
+        }
+
+        .titulo p {
+            margin: 0;
+            color: #64748b;
+        }
+
+        /* INFORMAÇÕES */
+
+        .secao {
+            margin-bottom: 25px;
+        }
+
+        .secao h3 {
+            margin: 0 0 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #0f172a;
+            font-size: 17px;
+        }
+
+        .campo {
+            border: 1px solid #dbe3ea;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 50px;
+        }
+
+        .campo strong {
+            color: #475569;
+        }
+
+        #nomePaciente {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        /* TEXTO DA ALTA */
+
+        .texto-alta {
+            line-height: 1.7;
+            font-size: 15px;
+            color: #334155;
+        }
+
+        /* ASSINATURA */
+
+        .assinatura {
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        .linha-assinatura {
+            width: 320px;
+            max-width: 90%;
+            margin: 0 auto 8px;
+            border-top: 1px solid #1f2937;
+        }
+
+        .assinatura p {
+            margin: 3px 0;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        /* BOTÕES */
+
+        .acoes {
+            display: flex;
+            gap: 12px;
+            margin-top: 35px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-imprimir {
+            background: #0284c7;
+            color: white;
+        }
+
+        .btn-imprimir:hover {
+            background: #0369a1;
+        }
+
+        .btn-voltar {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .btn-voltar:hover {
+            background: #cbd5e1;
+        }
+
+        /* DATA */
+
+        .data {
+            text-align: right;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* =========================
+           IMPRESSÃO / PDF
+        ========================= */
+
+        @media print {
+
+            @page {
+                size: A4;
+                margin: 18mm;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                max-width: none;
+                width: 100%;
+            }
+
+            .documento {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+            }
+
+            .acoes {
+                display: none;
+            }
+
+            .cabecalho {
+                margin-bottom: 25px;
+            }
+
+            .logo {
+                width: 190px;
+            }
+
+            .campo {
+                background: white;
+            }
+
+            .assinatura {
+                margin-top: 100px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .documento {
+                padding: 25px 20px;
+            }
+
+            .cabecalho h1 {
+                font-size: 23px;
+            }
+
+            .titulo h2 {
+                font-size: 21px;
+            }
+
+            .acoes {
+                flex-direction: column;
+            }
+
+            .linha-assinatura {
+                width: 260px;
+            }
+        }
+    </style>
 </head>
+
 <body>
+
     <div class="container">
-        <header>
-            <h1>Painel de Alunos</h1>
-            <p>Demonstração de CRUD Frontend/Backend (Node.js)</p>
-            <button onclick="window.print()" style="margin-top: Irem; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 8px; border: none; background: white; color: var(--primary-color);">⬇️
-                Dar alta </button>
-        </header>
+
+        <main class="documento">
+
+            <!-- CABEÇALHO -->
+            <header class="cabecalho">
+
+                <img
+                    src="respawn.svg"
+                    alt="Respawn Centro Médico"
+                    class="logo"
+                >
+
+                <h1>Respawn Centro Médico</h1>
+
+                <p>Documento de Alta Médica</p>
+
+            </header>
+
+
+            <!-- TÍTULO -->
+            <section class="titulo">
+
+                <h2>ALTA MÉDICA</h2>
+
+                <p>
+                    Documento referente ao encerramento do atendimento.
+                </p>
+
+            </section>
+
+
+            <!-- PACIENTE -->
+            <section class="secao">
+
+                <h3>Identificação do paciente</h3>
+
+                <div class="campo">
+
+                    <strong>Paciente:</strong>
+
+                    <span id="nomePaciente">
+                        Não informado
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- INFORMAÇÕES -->
+            <section class="secao">
+
+                <h3>Informações da alta</h3>
+
+                <div class="texto-alta">
+
+                    <p>
+                        Declaro que o paciente identificado acima foi
+                        atendido neste estabelecimento e encontra-se
+                        liberado para deixar a unidade após a conclusão
+                        do atendimento médico.
+                    </p>
+
+                    <p>
+                        O paciente deverá seguir as orientações,
+                        prescrições e recomendações fornecidas pelo
+                        profissional responsável pelo atendimento.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- DATA -->
+            <div class="data">
+
+                Data:
+                <span id="dataAtual"></span>
+
+            </div>
+
+
+            <!-- ASSINATURA -->
+            <section class="assinatura">
+
+                <div class="linha-assinatura"></div>
+
+                <p>
+                    Assinatura do médico responsável
+                </p>
+
+                <p>
+                    CRM: ______________________________
+                </p>
+
+            </section>
+
+
+            <!-- AÇÕES -->
+            <div class="acoes">
+
+                <button
+                    class="btn-imprimir"
+                    onclick="imprimirAlta()"
+                >
+                    🖨️ Imprimir / Salvar PDF
+                </button>
+
+                <button
+                    class="btn-voltar"
+                    onclick="voltar()"
+                >
+                    ← Voltar
+                </button>
+
+            </div>
+
+        </main>
+
     </div>
+
+
+    <script>
+
+        // =========================
+        // NOME DO PACIENTE
+        // =========================
+
+        const parametros = new URLSearchParams(
+            window.location.search
+        );
+
+        const paciente = parametros.get("paciente");
+
+        if (paciente) {
+
+            document.getElementById("nomePaciente").textContent =
+                paciente;
+
+        }
+
+
+        // =========================
+        // DATA ATUAL
+        // =========================
+
+        const agora = new Date();
+
+        const dataFormatada =
+            agora.toLocaleDateString("pt-BR");
+
+        document.getElementById("dataAtual").textContent =
+            dataFormatada;
+
+
+        // =========================
+        // IMPRIMIR / SALVAR PDF
+        // =========================
+
+        function imprimirAlta() {
+
+            window.print();
+
+        }
+
+
+        // =========================
+        // VOLTAR
+        // =========================
+
+        function voltar() {
+
+            window.history.back();
+
+        }
+
+    </script>
+
 </body>
+
 </html>
+```
