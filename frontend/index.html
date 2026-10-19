@@ -1,9 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Respawn Centro Médico - Login</title>
+
   <style>
     * {
       margin: 0;
@@ -29,7 +31,8 @@
       max-width: 400px;
       padding: 36px 30px;
       border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08),
+                  0 8px 10px -6px rgba(0, 0, 0, 0.01);
       border: 1px solid #e2e8f0;
       display: flex;
       flex-direction: column;
@@ -92,6 +95,19 @@
       transform: scale(0.99);
     }
 
+    button:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
+
+    #mensagem {
+      width: 100%;
+      text-align: center;
+      font-size: 13px;
+      color: #dc2626;
+      overflow-wrap: anywhere;
+    }
+
     .slogan {
       margin-top: 20px;
       font-size: 14px;
@@ -110,35 +126,127 @@
     }
   </style>
 </head>
+
 <body>
 
-<div class="container">
-  <img src="respawn.svg" alt="Respawn Centro Médico" class="logo-img">
-  <h2>Acesso ao Sistema</h2>
-  <input id="usuario" placeholder="Usuário">
-  <input id="senha" type="password" placeholder="Senha">
-  <button onclick="login()">Entrar</button>
-</div>
+  <div class="container">
+    <img
+      src="respawn.svg"
+      alt="Respawn Centro Médico"
+      class="logo-img"
+    >
 
-<p class="slogan">não farmamos aura, farmamos vidas, muito mais que <span class="highlight-six-seven">six seven</span>.</p>
+    <h2>Acesso ao Sistema</h2>
 
-<script>
-function login() {
-  fetch("http://localhost:3000/login", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      usuario: usuario.value,
-      senha: senha.value
-    })
-  })
-  .then(r => r.json())
-  .then(data => {
-    if(data.tipo === "triagem") location.href = "triagem.html";
-    if(data.tipo === "medico") location.href = "medico.html";
-    if(data.tipo === "atendimento") location.href = "atendimento.html";
-  });
-}
-</script>
+    <input
+      id="usuario"
+      type="text"
+      placeholder="Usuário"
+      autocomplete="username"
+    >
+
+    <input
+      id="senha"
+      type="password"
+      placeholder="Senha"
+      autocomplete="current-password"
+    >
+
+    <button id="botaoEntrar" type="button" onclick="login()">
+      Entrar
+    </button>
+
+    <p id="mensagem" role="alert"></p>
+  </div>
+
+  <p class="slogan">
+    não farmamos aura, farmamos vidas, muito mais que
+    <span class="highlight-six-seven">six seven</span>.
+  </p>
+
+  <script>
+    async function login() {
+      const campoUsuario = document.getElementById("usuario");
+      const campoSenha = document.getElementById("senha");
+      const botao = document.getElementById("botaoEntrar");
+      const mensagem = document.getElementById("mensagem");
+
+      const usuario = campoUsuario.value.trim();
+      const senha = campoSenha.value;
+
+      mensagem.textContent = "";
+
+      if (!usuario || !senha) {
+        mensagem.textContent = "Preencha o usuário e a senha.";
+        return;
+      }
+
+      botao.disabled = true;
+      botao.textContent = "Entrando...";
+
+      try {
+        // Usa o endereço do próprio sistema hospedado no Render.
+        const resposta = await fetch("/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            usuario: usuario,
+            senha: senha
+          })
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+          mensagem.textContent =
+            dados.erro || "Usuário ou senha incorretos.";
+          return;
+        }
+
+        // Direciona conforme o tipo de usuário retornado pela API.
+        const paginas = {
+          triagem: "triagem.html",
+          medico: "medico.html",
+          atendimento: "atendimento.html"
+        };
+
+        const destino = paginas[dados.tipo];
+
+        if (!destino) {
+          mensagem.textContent =
+            "Tipo de usuário não reconhecido pelo sistema.";
+          return;
+        }
+
+        window.location.href = destino;
+
+      } catch (erro) {
+        console.error("Erro no login:", erro);
+
+        mensagem.textContent =
+          "Não foi possível conectar ao servidor. Tente novamente.";
+      } finally {
+        botao.disabled = false;
+        botao.textContent = "Entrar";
+      }
+    }
+
+    // Permite entrar pressionando a tecla Enter.
+    document.getElementById("senha").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        login();
+      }
+    });
+
+    document.getElementById("usuario").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        login();
+      }
+    });
+  </script>
+
 </body>
 </html>
+```
