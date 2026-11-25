@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -85,21 +84,25 @@
 
     .btn-secondary {
       background: #e2e8f0;
-      color: #263746;
+      color: #334155;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
     }
 
     .btn-cancel {
-      background: #fee2e2;
-      color: #991b1b;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid var(--border);
     }
 
-    button:disabled {
-      opacity: 0.6;
-      cursor: wait;
+    .btn-cancel:hover {
+      background: #e2e8f0;
     }
 
     .page {
-      width: min(1180px, 92%);
+      width: min(1150px, 92%);
       margin: 28px auto;
     }
 
@@ -120,10 +123,10 @@
     .panel {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 15px;
+      border-radius: 14px;
       padding: 22px;
       margin-bottom: 22px;
-      box-shadow: 0 5px 18px rgba(15, 40, 60, 0.04);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
     }
 
     .panel-header {
@@ -183,6 +186,20 @@
       margin-top: 5px;
     }
 
+    .btn-absent {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      border-radius: 9px;
+      padding: 11px 15px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .btn-absent:hover {
+      background: #fecaca;
+    }
+
     .empty, .error-message {
       padding: 18px;
       border-radius: 10px;
@@ -223,7 +240,7 @@
     .form-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
+      gap: 17px;
     }
 
     .field {
@@ -236,29 +253,33 @@
       grid-column: 1 / -1;
     }
 
-    label {
-      font-size: 13px;
-      font-weight: 700;
+    .field label {
+      font-size: 14px;
+      font-weight: 600;
       color: #334155;
     }
 
-    input, select, textarea {
+    .field input,
+    .field select,
+    .field textarea {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #cbd5e1;
+      border: 1px solid var(--border);
       border-radius: 9px;
-      background: white;
+      padding: 12px;
+      background: #fff;
       color: var(--text);
       outline: none;
     }
 
-    input:focus, select:focus, textarea:focus {
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(8, 127, 140, 0.12);
+      box-shadow: 0 0 0 3px rgba(8, 127, 140, 0.1);
     }
 
-    textarea {
-      min-height: 100px;
+    .field textarea {
+      min-height: 105px;
       resize: vertical;
     }
 
@@ -271,57 +292,53 @@
 
     #resultado {
       display: none;
-      margin-top: 20px;
-      padding: 16px;
+      margin-top: 18px;
+      padding: 15px;
       border-radius: 10px;
       border: 1px solid var(--border);
     }
 
-    #resultado.vermelho {
+    #resultado strong {
       display: block;
-      color: #991b1b;
+      margin-bottom: 7px;
+    }
+
+    #resultado p {
+      margin: 5px 0;
+    }
+
+    #resultado.vermelho {
       background: #fef2f2;
       border-color: #fecaca;
+      color: #991b1b;
     }
 
     #resultado.amarelo {
-      display: block;
-      color: #92400e;
       background: #fffbeb;
       border-color: #fde68a;
+      color: #92400e;
     }
 
     #resultado.verde {
-      display: block;
-      color: #166534;
       background: #f0fdf4;
       border-color: #bbf7d0;
-    }
-
-    #resultado strong {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 17px;
+      color: #166534;
     }
 
     .disclaimer {
-      margin-top: 10px;
       font-size: 12px;
-      line-height: 1.5;
+      opacity: 0.85;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     @media (max-width: 650px) {
-      .topbar {
-        padding: 18px 5%;
-      }
-
-      .topbar h1 {
-        font-size: 20px;
-      }
-
       .page {
         width: 94%;
-        margin-top: 20px;
+        margin: 18px auto;
       }
 
       .panel {
@@ -362,7 +379,24 @@
       <p>Selecione um paciente para registrar os sintomas e a avaliação inicial.</p>
     </section>
 
-    <!-- FORMULÁRIO NO TOPO -->
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h3>Pacientes aguardando triagem</h3>
+          <span class="muted">A lista é atualizada automaticamente.</span>
+        </div>
+
+        <button class="btn-secondary" type="button"
+          onclick="carregarPacientes()">
+          ↻ Atualizar
+        </button>
+      </div>
+
+      <div id="fila-pacientes" class="fila">
+        <div class="empty">Carregando pacientes...</div>
+      </div>
+    </section>
+
     <section class="panel" id="areaTriagem">
       <div class="panel-header">
         <h3>🩺 Registro da triagem</h3>
@@ -437,26 +471,6 @@
 
       <div id="resultado" role="status" aria-live="polite"></div>
     </section>
-
-    <!-- FILA DE PACIENTES -->
-    <section class="panel">
-      <div class="panel-header">
-        <div>
-          <h3>Pacientes aguardando triagem</h3>
-          <span class="muted">A lista é atualizada automaticamente.</span>
-        </div>
-
-        <button class="btn-secondary" type="button"
-          onclick="carregarPacientes()">
-          ↻ Atualizar
-        </button>
-      </div>
-
-      <div id="fila-pacientes" class="fila">
-        <div class="empty">Carregando pacientes...</div>
-      </div>
-    </section>
-
   </main>
 
   <script>
@@ -526,13 +540,63 @@
           botaoTV.textContent = "📺 Chamar na TV";
           botaoTV.addEventListener("click", () => chamarNaTV(paciente.nome));
 
-          card.append(titulo, info, botao, botaoTV);
+          const botaoAusente = document.createElement("button");
+          botaoAusente.className = "btn-absent";
+          botaoAusente.type = "button";
+          botaoAusente.textContent = "Registrar como ausente";
+          botaoAusente.addEventListener("click", () => registrarAusencia(paciente));
+
+          card.append(titulo, info, botao, botaoTV, botaoAusente);
           fila.appendChild(card);
         });
       } catch (erro) {
         console.error(erro);
         fila.innerHTML =
           '<div class="error-message">Erro ao carregar a fila. Tente atualizar a lista.</div>';
+      }
+    }
+
+    async function registrarAusencia(paciente) {
+      const nome = paciente.nome || "este paciente";
+
+      const confirmou = confirm(
+        "Confirma que " + nome +
+        " deixou a unidade antes de realizar a triagem?\n\n" +
+        "O paciente será retirado da fila e registrado como ausente."
+      );
+
+      if (!confirmou) return;
+
+      try {
+        const resposta = await fetch(
+          "/pacientes/" + encodeURIComponent(paciente.id) + "/ausente",
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              motivo: "Paciente deixou a unidade antes da triagem"
+            })
+          }
+        );
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+          throw new Error(dados.erro || "Não foi possível registrar a ausência.");
+        }
+
+        if (
+          pacienteSelecionado &&
+          String(pacienteSelecionado.id) === String(paciente.id)
+        ) {
+          cancelarSelecao();
+        }
+
+        alert("Ausência de " + nome + " registrada com sucesso.");
+        await carregarPacientes();
+      } catch (erro) {
+        console.error(erro);
+        alert(erro.message || "Erro ao registrar a ausência do paciente.");
       }
     }
 
@@ -561,9 +625,6 @@
       areaTriagem.style.display = "none";
       formTriagem.reset();
       resultado.style.display = "none";
-      resultado.className = "";
-      btnSalvar.disabled = false;
-      btnSalvar.textContent = "Analisar risco e salvar triagem";
     }
 
     async function chamarNaTV(nome) {
@@ -684,14 +745,11 @@
           dadosSalvos.justificativaRisco || classificacao.justificativa
         );
 
-        alert("Triagem salva e encaminhada para a fila médica. Confira a classificação com a equipe responsável.");
+        alert("Triagem salva. Confira a classificação com a equipe responsável.");
 
-        // Fecha o formulário e limpa a seleção após salvar com sucesso.
-        cancelarSelecao();
-
-        // Atualiza a fila após a alteração do status no servidor.
+        pacienteSelecionado = null;
+        formTriagem.reset();
         await carregarPacientes();
-
       } catch (erro) {
         console.error(erro);
         alert(erro.message || "Ocorreu um erro ao salvar a triagem.");
