@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -361,24 +362,7 @@
       <p>Selecione um paciente para registrar os sintomas e a avaliação inicial.</p>
     </section>
 
-    <section class="panel">
-      <div class="panel-header">
-        <div>
-          <h3>Pacientes aguardando triagem</h3>
-          <span class="muted">A lista é atualizada automaticamente.</span>
-        </div>
-
-        <button class="btn-secondary" type="button"
-          onclick="carregarPacientes()">
-          ↻ Atualizar
-        </button>
-      </div>
-
-      <div id="fila-pacientes" class="fila">
-        <div class="empty">Carregando pacientes...</div>
-      </div>
-    </section>
-
+    <!-- FORMULÁRIO NO TOPO -->
     <section class="panel" id="areaTriagem">
       <div class="panel-header">
         <h3>🩺 Registro da triagem</h3>
@@ -453,6 +437,26 @@
 
       <div id="resultado" role="status" aria-live="polite"></div>
     </section>
+
+    <!-- FILA DE PACIENTES -->
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h3>Pacientes aguardando triagem</h3>
+          <span class="muted">A lista é atualizada automaticamente.</span>
+        </div>
+
+        <button class="btn-secondary" type="button"
+          onclick="carregarPacientes()">
+          ↻ Atualizar
+        </button>
+      </div>
+
+      <div id="fila-pacientes" class="fila">
+        <div class="empty">Carregando pacientes...</div>
+      </div>
+    </section>
+
   </main>
 
   <script>
@@ -557,6 +561,9 @@
       areaTriagem.style.display = "none";
       formTriagem.reset();
       resultado.style.display = "none";
+      resultado.className = "";
+      btnSalvar.disabled = false;
+      btnSalvar.textContent = "Analisar risco e salvar triagem";
     }
 
     async function chamarNaTV(nome) {
@@ -677,11 +684,14 @@
           dadosSalvos.justificativaRisco || classificacao.justificativa
         );
 
-        alert("Triagem salva. Confira a classificação com a equipe responsável.");
+        alert("Triagem salva e encaminhada para a fila médica. Confira a classificação com a equipe responsável.");
 
-        pacienteSelecionado = null;
-        formTriagem.reset();
+        // Fecha o formulário e limpa a seleção após salvar com sucesso.
+        cancelarSelecao();
+
+        // Atualiza a fila após a alteração do status no servidor.
         await carregarPacientes();
+
       } catch (erro) {
         console.error(erro);
         alert(erro.message || "Ocorreu um erro ao salvar a triagem.");
