@@ -51,8 +51,6 @@ function writeDB(data) {
 // CLASSIFICAÇÃO DE RISCO
 // ======================================================
 
-// Sinais de alerta que não devem aguardar uma resposta da IA.
-// A equipe de saúde deve avaliar imediatamente esses casos.
 function identificarSinalDeEmergencia(sintoma, observacao) {
   const texto = `${sintoma || ""} ${observacao || ""}`
     .normalize("NFD")
@@ -118,7 +116,6 @@ function classificarPorRegras(sintoma, temperatura, observacao) {
   };
 }
 
-// A IA é usada como apoio à decisão, nunca como diagnóstico definitivo.
 app.post("/classificar-risco", async (req, res) => {
   const sintoma = String(req.body.sintoma || "").trim();
   const observacao = String(req.body.observacao || "").trim();
@@ -135,7 +132,6 @@ app.post("/classificar-risco", async (req, res) => {
     });
   }
 
-  // Não esperar pela IA diante de possíveis sinais de emergência.
   if (identificarSinalDeEmergencia(sintoma, observacao)) {
     return res.json({
       ...classificarPorRegras(sintoma, temperatura, observacao)
@@ -144,8 +140,6 @@ app.post("/classificar-risco", async (req, res) => {
 
   const apiKey = process.env.OPENAI_API_KEY;
 
-  // Sem chave configurada, o sistema usa regras de segurança
-  // e deixa explícito que a IA não foi utilizada.
   if (!apiKey) {
     return res.json(
       classificarPorRegras(sintoma, temperatura, observacao)
@@ -192,7 +186,6 @@ Não inclua nomes, dados pessoais, diagnósticos definitivos ou tratamento.
       const detalhe = await resposta.text();
       console.error("Falha na API de IA:", resposta.status, detalhe);
 
-      // Se a IA falhar, usar as regras locais e informar o método.
       return res.json(
         classificarPorRegras(sintoma, temperatura, observacao)
       );
@@ -216,8 +209,6 @@ Não inclua nomes, dados pessoais, diagnósticos definitivos ou tratamento.
       );
     }
 
-    // A temperatura elevada continua sendo um alerta de segurança.
-    // A IA não pode reduzir a prioridade estabelecida por essa regra.
     const regraTemperatura =
       classificarPorRegras(sintoma, temperatura, observacao);
 
@@ -301,6 +292,43 @@ app.get("/pacientes", (req, res) => {
 });
 
 // ======================================================
+// REGISTRAR PACIENTE COMO AUSENTE ANTES DA TRIAGEM
+// ======================================================
+
+app.patch("/pacientes/:id/ausente", (req, res) => {
+  const db = readDB();
+
+  const paciente = db.pacientes.find(
+    item => String(item.id) === String(req.params.id)
+  );
+
+  if (!paciente) {
+    return res.status(404).json({
+      erro: "Paciente não encontrado."
+    });
+  }
+
+  if (paciente.status !== "triagem") {
+    return res.status(400).json({
+      erro: "Este paciente não está mais aguardando triagem."
+    });
+  }
+
+  paciente.status = "ausente";
+  paciente.motivoAusencia = String(
+    req.body.motivo || "Paciente deixou a unidade antes da triagem"
+  ).trim();
+  paciente.dataAusencia = new Date().toISOString();
+
+  writeDB(db);
+
+  return res.json({
+    mensagem: "Ausência registrada com sucesso.",
+    paciente
+  });
+});
+
+// ======================================================
 // SALVAR TRIAGEM
 // ======================================================
 
@@ -341,7 +369,6 @@ app.post("/triagem", (req, res) => {
 
   db.triagens.push(triagem);
 
-  // Prioriza o ID para não atualizar outro paciente com o mesmo nome.
   let paciente = null;
 
   if (req.body.pacienteId) {
